@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchMenu } from './menuAPI';
+import ApiCallState from '../../common/enum/ApiState';
+import { fetchMenu, addMenuItem } from './menuAPI';
 
 const menuInitialState = {
     data: [],
-    state: 'succeeded',
+    state: ApiCallState.SUCCEEDED,
 };
 
 export const selectMenu = (state) => state.menu;
@@ -14,10 +15,29 @@ export const getAllMenu = createAsyncThunk('menu/getAllMenu', async () => {
     return data;
 });
 
+export const addNewMenuItem = createAsyncThunk(
+    'menu/addNewMenuItem',
+    async () => {
+        const [data, error] = await addMenuItem();
+        console.log(data);
+        return data;
+    }
+);
+
 const getAllMenuBuilder = (builder) => {
     builder.addCase(getAllMenu.fulfilled, (state, action) => {
         return {
-            state: 'succeeded',
+            state: ApiCallState.SUCCEEDED,
+            data: action.payload,
+        };
+    });
+    return builder;
+};
+
+const addMenuItemBuilder = (builder) => {
+    builder.addCase(addNewMenuItem.fulfilled, (state, action) => {
+        return {
+            state: ApiCallState.SUCCEEDED,
             data: action.payload,
         };
     });
@@ -30,6 +50,7 @@ const menuSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         getAllMenuBuilder(builder);
+        addMenuItemBuilder(builder);
     },
 });
 

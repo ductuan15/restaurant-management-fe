@@ -1,7 +1,15 @@
-import { Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
+import {
+    Card,
+    CardActionArea,
+    CardMedia,
+    CardContent,
+    CardActions,
+    IconButton,
+} from '@mui/material';
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
-import MenuDetail from './MenuDetail';
+import MenuOrder from './MenuOrder';
+import EditIcon from '@mui/icons-material/Edit';
 
 const MenuItem = ({ menuItem }) => {
     const [isDetailOpen, setDetailOpen] = useState(false);
@@ -36,11 +44,11 @@ const MenuItem = ({ menuItem }) => {
                     </CardContent>
                 </CardActionArea>
             </Card>
-            <MenuDetail
+            <MenuOrder
                 isOpen={isDetailOpen}
                 onClose={handleOnDetailClose}
                 menuItem={menuItem}
-            ></MenuDetail>
+            ></MenuOrder>
         </>
     );
 };
