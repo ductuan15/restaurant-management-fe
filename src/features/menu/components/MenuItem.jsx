@@ -9,7 +9,7 @@ import {
 import React, { useState } from 'react';
 import Typography from '@mui/material/Typography';
 import MenuOrder from './MenuOrder';
-import EditIcon from '@mui/icons-material/Edit';
+import { ThemePalette } from '../../../app/theme';
 
 const MenuItem = ({ menuItem }) => {
     const [isDetailOpen, setDetailOpen] = useState(false);
@@ -27,7 +27,7 @@ const MenuItem = ({ menuItem }) => {
                 <CardActionArea onClick={handleOnOpenDetail}>
                     <CardMedia
                         component="img"
-                        height="140"
+                        height="280"
                         image={menuItem.image}
                     ></CardMedia>
                     <CardContent>

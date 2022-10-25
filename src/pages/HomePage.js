@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box } from '@mui/material';
 
-import MenuList from '../features/menu/components/MenuList';
 import TopBar from '../components/TopBar';
+import MenuList from '../features/menu/pages/MenuList';
 
 const HomePage = () => {
     return (

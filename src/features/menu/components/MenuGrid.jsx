@@ -1,20 +1,13 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllMenu, selectMenu } from '../menuSlice';
+import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import MenuItem from './MenuItem';
-const MenuList = () => {
-    const menuState = useSelector(selectMenu);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getAllMenu());
-    }, []);
+const MenuGrid = ({ menuItems }) => {
     return (
         <>
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container spacing={2}>
-                    {menuState.data.map((menuItem) => {
+                    {menuItems.map((menuItem) => {
                         return (
                             <Grid xs={3}>
                                 <MenuItem
@@ -30,4 +23,4 @@ const MenuList = () => {
     );
 };
 
-export default MenuList;
+export default MenuGrid;

@@ -8,7 +8,12 @@ import {
     DialogContentText,
     TextField,
     Button,
+    IconButton,
+    Link,
 } from '@mui/material';
+
+import EditIcon from '@mui/icons-material/Edit';
+import { redirect } from 'react-router-dom';
 
 const MenuOrder = ({ isOpen, onClose, menuItem }) => {
     const [amount, setAmount] = useState(0);
@@ -21,15 +26,32 @@ const MenuOrder = ({ isOpen, onClose, menuItem }) => {
         };
     };
 
+    const handleOnClose = (e) => {
+        onClose();
+        setAmount(0);
+    };
+
     const handleAddToCart = (e) => {};
     return (
-        <Dialog maxWidth={'sm'} fullWidth onClose={onClose} open={isOpen}>
+        <Dialog maxWidth={'sm'} fullWidth onClose={handleOnClose} open={isOpen}>
             <DialogTitle>
                 <Box>
                     <Typography sx={{ fontWeight: 'bold' }} variant="h5">
                         {menuItem.name}
                     </Typography>
                     <Typography variant="h5">{menuItem.price} $</Typography>
+                    <IconButton
+                        href={`/menu/${menuItem.id}`}
+                        component="button"
+                        sx={{
+                            position: 'absolute',
+                            right: 10,
+                            top: 10,
+                            color: (theme) => theme.palette.primary['main'],
+                        }}
+                    >
+                        <EditIcon></EditIcon>
+                    </IconButton>
                 </Box>
             </DialogTitle>
             <DialogContent>
@@ -37,7 +59,7 @@ const MenuOrder = ({ isOpen, onClose, menuItem }) => {
                 <TextField
                     id="filled-textarea"
                     label="Note"
-                    placeholder="note"
+                    placeholder="Customer's note about this dish"
                     multiline
                     variant="filled"
                     margin="dense"
