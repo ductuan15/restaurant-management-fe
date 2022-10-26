@@ -12,14 +12,19 @@ import {
     Button,
 } from '@mui/material';
 import { useFormik } from 'formik';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import foodType from '../../../common/enum/foodType';
 import { fetchMenuItemById } from '../menuAPI';
-import { addNewMenuItemThunk } from '../menuSlice';
+import { addNewMenuItemThunk, updateMenuItemThunk } from '../menuSlice';
 const MenuDetailForm = ({ menuItemDetail }) => {
     const dispatch = useDispatch();
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const handleClose = (event, reason) => {
+        setIsSuccess(false);
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -27,33 +32,63 @@ const MenuDetailForm = ({ menuItemDetail }) => {
             type: foodType.ALCOHOL,
             description: menuItemDetail.description,
             price: menuItemDetail.price,
-            ingredient: '',
+            ingredient: menuItemDetail.ingredient,
+            image: menuItemDetail.image,
         },
         enableReinitialize: true,
         onSubmit: (values) => {
-            console.log(values);
-            dispatch(
-                addNewMenuItemThunk({
-                    ...values,
-                    type: values.type.value,
-                })
-            );
+            if (menuItemDetail.id) {
+                dispatch(
+                    updateMenuItemThunk({
+                        ...values,
+                        type: values.type.value,
+                        id: menuItemDetail.id,
+                    })
+                );
+            } else {
+                dispatch(
+                    addNewMenuItemThunk({
+                        ...values,
+                        type: values.type.value,
+                    })
+                );
+            }
         },
     });
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <Box sx={{ margin: 1 }}>
-                <img src={menuItemDetail.image}></img>
-            </Box>
-            <Box>
-                <form onSubmit={formik.handleSubmit}>
-                    <FormControl>
-                        {/* Food Type  */}
-                        <Box>
-                            <InputLabel id="food-type">Age</InputLabel>
+        <Box sx={{ flexGrow: 1 }}>
+            <form onSubmit={formik.handleSubmit}>
+                <Box
+                    component="img"
+                    src={
+                        menuItemDetail.image
+                            ? menuItemDetail.image
+                            : 'https://placeholder.pics/svg/400x300'
+                    }
+                    sx={{ margin: 1, maxHeight: 300, maxWidth: 400 }}
+                ></Box>
+                <Box>
+                    <Button
+                        sx={{ margin: 1, width: 1 / 4 }}
+                        variant="contained"
+                        type="submit"
+                    >
+                        Save
+                    </Button>
+                    <Button
+                        sx={{ margin: 1, width: 1 / 4 }}
+                        type="submit"
+                        variant="contained"
+                    >
+                        Delete
+                    </Button>
+                    {/* Food Type  */}
+                    <Box>
+                        <FormControl sx={{ margin: 1, width: 1 }}>
+                            <InputLabel id="food-type">Food type</InputLabel>
                             <Select
-                                sx={{ margin: 1 }}
+                                sx={{ width: 1 / 2 }}
                                 labelId="food-type"
                                 label="Food type"
                                 name="type"
@@ -75,40 +110,55 @@ const MenuDetailForm = ({ menuItemDetail }) => {
                                     {foodType.SOFTDRINK.display}
                                 </MenuItem>
                             </Select>
-                        </Box>
+                        </FormControl>
+                    </Box>
 
-                        {/* Name */}
-                        <TextField
-                            sx={{ margin: 1 }}
-                            label="Name"
-                            {...formik.getFieldProps('name')}
-                        ></TextField>
+                    {/* Name */}
+                    <TextField
+                        sx={{ margin: 1, width: 1 / 2 }}
+                        label="Name"
+                        {...formik.getFieldProps('name')}
+                    ></TextField>
 
-                        {/* Price */}
-                        <TextField
-                            sx={{ margin: 1 }}
-                            label="Price"
-                            {...formik.getFieldProps('price')}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        $
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
+                    {/* Price */}
+                    <TextField
+                        sx={{ margin: 1, width: 1 / 2 }}
+                        label="Price"
+                        {...formik.getFieldProps('price')}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    $
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
 
-                        {/* Description */}
-                        <TextField
-                            label="Description"
-                            multiline
-                            sx={{ margin: 1 }}
-                            {...formik.getFieldProps('description')}
-                        ></TextField>
-                    </FormControl>
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Box>
+                    {/* Description */}
+                    <TextField
+                        label="Description"
+                        multiline
+                        sx={{ margin: 1, width: 1 / 2 }}
+                        {...formik.getFieldProps('description')}
+                    ></TextField>
+
+                    {/* Image url */}
+                    <TextField
+                        label="Image url"
+                        multiline
+                        sx={{ margin: 1, width: 1 / 2 }}
+                        {...formik.getFieldProps('image')}
+                    ></TextField>
+
+                    {/* Image url */}
+                    <TextField
+                        label="Ingredients"
+                        multiline
+                        sx={{ margin: 1, width: 1 / 2 }}
+                        {...formik.getFieldProps('ingredient')}
+                    ></TextField>
+                </Box>
+            </form>
         </Box>
     );
 };

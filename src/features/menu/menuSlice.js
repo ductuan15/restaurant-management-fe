@@ -1,15 +1,32 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import ApiCallState from '../../common/enum/ApiState';
-import { fetchMenu, addMenuItem, fetchMenuItemById } from './menuAPI';
+import {
+    fetchMenu,
+    addMenuItem,
+    fetchMenuItemById,
+    updateMenuItem,
+} from './menuAPI';
+
+export const initialCurrentMenuItem = {
+    name: '',
+    price: 0,
+    description: '',
+    image: '',
+    type: '',
+};
 
 const menuInitialState = {
     data: [],
+    totalPage: 0,
     currentMenuItem: {
+        ...initialCurrentMenuItem,
+    },
+    currentOnOrderMenuItem: {
         name: '',
         price: 0,
         description: '',
-        image: null,
-        type: null,
+        image: '',
+        type: '',
     },
     state: ApiCallState.SUCCEEDED,
 };
@@ -18,8 +35,14 @@ export const selectMenu = (state) => state.menu;
 
 export const getAllMenuThunk = createAsyncThunk(
     'menu/fetchAllMenu',
-    async (page, limit) => {
-        const [data, error] = await fetchMenu(page);
+    async (filter) => {
+        console.log(filter);
+        const [data, error] = await fetchMenu(
+            filter.page,
+            filter.key,
+            filter.priceRange,
+            filter.type
+        );
         console.log(data);
         return data;
     }
@@ -28,8 +51,8 @@ export const getAllMenuThunk = createAsyncThunk(
 export const addNewMenuItemThunk = createAsyncThunk(
     'menu/addNewMenuItem',
     async (menuItem) => {
+        console.log(menuItem);
         const [data, error] = await addMenuItem(menuItem);
-        console.log(data);
         return data;
     }
 );
@@ -43,11 +66,21 @@ export const fetchMenuItemByIdThunk = createAsyncThunk(
     }
 );
 
+export const updateMenuItemThunk = createAsyncThunk(
+    'menu/updateById',
+    async (menuItem) => {
+        const [data, error] = await updateMenuItem(menuItem);
+        console.log(data);
+        return data;
+    }
+);
+
 const getAllMenuBuilder = (builder) => {
     builder.addCase(getAllMenuThunk.fulfilled, (state, action) => {
         return {
             state: ApiCallState.SUCCEEDED,
-            data: action.payload,
+            data: action.payload.items,
+            totalPage: action.payload.totalPage,
         };
     });
     return builder;
@@ -73,6 +106,16 @@ const fetchMenuItemByIdBuilder = (builder) => {
     });
 };
 
+const updateMenuItemBuilder = (builder) => {
+    builder.addCase(updateMenuItemThunk.fulfilled, (state, action) => {
+        return {
+            ...state,
+            state: ApiCallState.SUCCEEDED,
+            currentMenuItem: action.payload,
+        };
+    });
+};
+
 const menuSlice = createSlice({
     name: 'menu',
     initialState: menuInitialState,
@@ -81,6 +124,7 @@ const menuSlice = createSlice({
         getAllMenuBuilder(builder);
         addMenuItemBuilder(builder);
         fetchMenuItemByIdBuilder(builder);
+        updateMenuItemBuilder(builder);
     },
 });
 

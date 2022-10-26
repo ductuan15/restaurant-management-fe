@@ -16,20 +16,34 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import foodType from '../../../common/enum/foodType';
 import MenuDetailForm from '../components/MenuDetailForm';
-import { fetchMenuItemById } from '../menuAPI';
 import {
-    addNewMenuItemThunk,
     fetchMenuItemByIdThunk,
     selectMenu,
+    initialCurrentMenuItem,
 } from '../menuSlice';
 const MenuDetail = () => {
     const { menuId } = useParams();
     const dispatch = useDispatch();
     const { currentMenuItem } = useSelector(selectMenu);
     useEffect(() => {
-        dispatch(fetchMenuItemByIdThunk(menuId));
+        (async () => {
+            if (menuId) await dispatch(fetchMenuItemByIdThunk(menuId)).unwrap();
+        })();
     }, []);
-    return <MenuDetailForm menuItemDetail={currentMenuItem}></MenuDetailForm>;
+    return (
+        <Box sx={{ flexGrow: 1 }}>
+            <MenuDetailForm
+                menuItemDetail={
+                    menuId
+                        ? currentMenuItem
+                        : {
+                              ...initialCurrentMenuItem,
+                          }
+                }
+            ></MenuDetailForm>
+            ;
+        </Box>
+    );
 };
 
 export default MenuDetail;

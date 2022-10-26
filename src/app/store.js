@@ -3,6 +3,7 @@ import counterReducer from '../features/counter/counterSlice';
 import profileReducer from '../features/profile/profileSlice';
 import themeReducer from '../features/theme/themeSlice';
 import menuReducer from '../features/menu/menuSlice';
+import billReducer from '../features/bill/billSlice';
 
 export const store = configureStore({
     reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
         profile: profileReducer,
         theme: themeReducer,
         menu: menuReducer,
+        bill: billReducer,
     },
 });

@@ -11,24 +11,19 @@ import Typography from '@mui/material/Typography';
 import MenuOrder from './MenuOrder';
 import { ThemePalette } from '../../../app/theme';
 
-const MenuItem = ({ menuItem }) => {
-    const [isDetailOpen, setDetailOpen] = useState(false);
-
-    const handleOnDetailClose = () => {
-        setDetailOpen(false);
-    };
-
-    const handleOnOpenDetail = () => {
-        setDetailOpen(true);
-    };
+const MenuItem = ({ menuItem, onOpenOrder }) => {
     return (
         <>
             <Card>
-                <CardActionArea onClick={handleOnOpenDetail}>
+                <CardActionArea onClick={onOpenOrder(menuItem)}>
                     <CardMedia
                         component="img"
                         height="280"
-                        image={menuItem.image}
+                        image={
+                            menuItem.image
+                                ? menuItem.image
+                                : 'https://placeholder.pics/svg/500x280'
+                        }
                     ></CardMedia>
                     <CardContent>
                         <Typography gutterBottom variant="h6" component="div">
@@ -44,11 +39,6 @@ const MenuItem = ({ menuItem }) => {
                     </CardContent>
                 </CardActionArea>
             </Card>
-            <MenuOrder
-                isOpen={isDetailOpen}
-                onClose={handleOnDetailClose}
-                menuItem={menuItem}
-            ></MenuOrder>
         </>
     );
 };

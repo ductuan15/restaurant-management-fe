@@ -16,8 +16,12 @@ const foodType = {
         display: 'Alcohol',
     },
     SOFTDRINK: {
-        value: 'SoftDrink',
+        value: 'Soft Drink',
         display: 'Soft Drink',
+    },
+    NONE: {
+        value: 'none',
+        display: 'None',
     },
 };
 
