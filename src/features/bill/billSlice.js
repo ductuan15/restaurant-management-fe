@@ -111,7 +111,15 @@ const updateBillStatusBuilder = (builder) => {
 
 const removeMenuIdFromBillBuilder = (builder) => {
     builder.addCase(removeMenuIdFromBillThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.currentBill = action.payload;
+        state.data.some((billItem) => {
+            if (billItem.id === action.payload.id) {
+                billItem.items = action.payload.items;
+                return true;
+            }
+            return false;
+        });
     });
 };
 
